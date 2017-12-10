@@ -145,6 +145,7 @@
       <Filter>darknet</Filter>
     </ClInclude>
     <ClInclude Include="libdarknet_detector.hpp" />
+    <ClInclude Include="libdarknet_detector_crl.hpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="..\base\src\activation_kernels.cu">
@@ -366,5 +367,6 @@
       <Filter>darknet</Filter>
     </ClCompile>
     <ClCompile Include="libdarknet_detector.cpp" />
+    <ClCompile Include="libdarknet_detector_crl.cpp" />
   </ItemGroup>
 </Project>

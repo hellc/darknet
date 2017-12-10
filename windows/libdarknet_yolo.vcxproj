@@ -66,6 +66,7 @@
     <ClInclude Include="..\base\src\unistd.h" />
     <ClInclude Include="..\base\src\utils.h" />
     <ClInclude Include="libdarknet_detector.hpp" />
+    <ClInclude Include="libdarknet_detector_crl.hpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="..\base\src\activation_kernels.cu" />
@@ -265,6 +266,12 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="libdarknet_detector.cpp" />
+    <ClCompile Include="libdarknet_detector_crl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4CF5694F-12A5-4012-8D94-9A0915E9FEB5}</ProjectGuid>

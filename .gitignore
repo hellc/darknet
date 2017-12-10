@@ -30,3 +30,4 @@ Thumbs.db
 *.user
 windows/x64/
 *.pdb
+obj/
