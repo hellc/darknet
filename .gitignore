@@ -25,3 +25,8 @@ ehthumbs.db
 Icon?
 Thumbs.db
 *.swp
+*.ipch
+.vs/
+*.user
+windows/x64/
+*.pdb
