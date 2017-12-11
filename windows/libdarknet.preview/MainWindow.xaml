@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:libdarknet.preview"
         mc:Ignorable="d"
-        Title="Preview" Height="350" Width="525">
-    <Grid Background="Black">
-        <Image Name="_image"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-
+        Title="Preview" Height="480" Width="640">
+    <Grid Background="DarkGray">
+        <Image Name="_image" Margin="20"/>
+        <Button Content="Start Cam" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Start Detector" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="100" Click="Button_Click_1"/>
     </Grid>
 </Window>

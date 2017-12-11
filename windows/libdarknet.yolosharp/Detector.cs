@@ -17,9 +17,9 @@ namespace libdarknet.yolosharp
             _detectorWrapper = new DetectorWrapper();
         }
 
-        public void Load(string cfgFileName, string weightsFileName)
+        public void Load(string cfgFileName, string weightsFileName, string namesFileName = null)
         {
-            _detectorWrapper.Load(cfgFileName, weightsFileName);
+            _detectorWrapper.Load(cfgFileName, weightsFileName, namesFileName);
         }
 
         public Detection[] DetectFromFile(string fileName)

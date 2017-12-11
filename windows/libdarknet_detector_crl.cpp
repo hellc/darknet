@@ -1,5 +1,7 @@
 #include "libdarknet_detector_crl.hpp"
 
+std::vector<std::string> m_names;
+
 std::string convert_system_string(System::String^ input)
 {
 	std::string result;
@@ -12,8 +14,61 @@ std::string convert_system_string(System::String^ input)
 	return result;
 }
 
+String^ convert_std_string(std::string str)
+{
+	return gcnew String(str.c_str());;
+}
+
+std::vector<std::string> objects_names_from_file(std::string const filename) {
+	std::ifstream file(filename);
+	std::vector<std::string> file_lines;
+	if (!file.is_open()) return file_lines;
+	for (std::string line; file >> line;) file_lines.push_back(line);
+	std::cout << "object names loaded \n";
+	return file_lines;
+}
+
+
+std::string object_name_by_index(int index) {
+	if (index >= m_names.size()) return "";
+	return m_names[index];
+}
+
+array<libdarknet_yolo::Detection>^ detections_from_vector(std::vector<bbox_t> vector)
+{
+	int vector_size = vector.size();
+	array<libdarknet_yolo::Detection>^ detections = gcnew array<libdarknet_yolo::Detection>(vector_size);
+
+	if (vector_size > 0)
+	{
+		for (auto i = 0; i != vector_size; i++) {
+			detections[i].h = vector[i].h;
+			detections[i].w = vector[i].w;
+			detections[i].x = vector[i].x;
+			detections[i].y = vector[i].y;
+			detections[i].obj_id = vector[i].obj_id;
+			detections[i].prob = vector[i].prob;
+			detections[i].track_id = vector[i].track_id;
+
+			int names_count = m_names.size();
+			if (names_count > 0 && vector[i].obj_id < names_count && vector[i].obj_id)
+			{
+				detections[i].obj_name = convert_std_string(object_name_by_index(vector[i].obj_id));
+			}
+		}
+	}
+	
+	return detections;
+}
+
 void libdarknet_yolo::DetectorWrapper::Load(System::String ^ cfg_filename, System::String ^ weights_filename)
 {
+	m_detector->Load(convert_system_string(cfg_filename), convert_system_string(weights_filename));
+}
+
+void libdarknet_yolo::DetectorWrapper::Load(String ^ cfg_filename, String ^ weights_filename, String ^ names_filename)
+{
+	m_names = objects_names_from_file(convert_system_string(names_filename));
 	m_detector->Load(convert_system_string(cfg_filename), convert_system_string(weights_filename));
 }
 
@@ -21,17 +76,7 @@ array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::DetectFromF
 {
 	std::vector<bbox_t> results = m_detector->detect(convert_system_string(filename));
 
-	array<Detection>^ detections = gcnew array<Detection>(results.size());
-	for (auto i = 0; i != results.size(); i++) {
-		detections[i].h = results[i].h;
-		detections[i].w = results[i].w;
-		detections[i].x = results[i].x;
-		detections[i].y = results[i].y;
-		detections[i].obj_id = results[i].obj_id;
-		detections[i].prob = results[i].prob;
-		detections[i].track_id = results[i].track_id;
-	}
-	return detections;
+	return detections_from_vector(results);
 }
 
 image_t BitmapToImage_t(System::Drawing::Bitmap^ bitmap)
@@ -104,17 +149,7 @@ array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::DetectOnIma
 	cv::Mat image = BitmapToMat(bitmap);
 	std::vector<bbox_t> results = m_detector->detect(image);
 
-	array<Detection>^ detections = gcnew array<Detection>(results.size());
-	for (auto i = 0; i != results.size(); i++) {
-		detections[i].h = results[i].h;
-		detections[i].w = results[i].w;
-		detections[i].x = results[i].x;
-		detections[i].y = results[i].y;
-		detections[i].obj_id = results[i].obj_id;
-		detections[i].prob = results[i].prob;
-		detections[i].track_id = results[i].track_id;
-	}
-	return detections;
+	return detections_from_vector(results);
 }
 
 array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::DetectOnImage(DImage image)
@@ -127,15 +162,5 @@ array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::DetectOnIma
 
 	std::vector<bbox_t> results = m_detector->detect(imaget);
 
-	array<Detection>^ detections = gcnew array<Detection>(results.size());
-	for (auto i = 0; i != results.size(); i++) {
-		detections[i].h = results[i].h;
-		detections[i].w = results[i].w;
-		detections[i].x = results[i].x;
-		detections[i].y = results[i].y;
-		detections[i].obj_id = results[i].obj_id;
-		detections[i].prob = results[i].prob;
-		detections[i].track_id = results[i].track_id;
-	}
-	return detections;
+	return detections_from_vector(results);
 }

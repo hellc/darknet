@@ -18,6 +18,10 @@ using Emgu.CV;
 using System.Runtime.InteropServices;
 using Emgu.CV.CvEnum;
 
+using libdarknet.yolosharp;
+using System.Drawing;
+using libdarknet_yolo;
+
 namespace libdarknet.preview
 {
     /// <summary>
@@ -26,6 +30,7 @@ namespace libdarknet.preview
     public partial class MainWindow : Window
     {
         private Capture _capture;
+        private Detector _detector;
 
         public MainWindow()
         {
@@ -36,10 +41,34 @@ namespace libdarknet.preview
         {
             Mat currentFrame = new Mat();
             _capture.Retrieve(currentFrame);
-            
+
+
+            Detection[] detections = new Detection[0];
+            if (currentFrame != null && _detector != null)
+            {
+                using (System.Drawing.Bitmap bitmap = currentFrame.Clone().Bitmap)
+                {
+                    detections = _detector.DetectOnImage(bitmap);
+                }
+            }
+
             Dispatcher.Invoke(() =>
             {
-                _image.Source = ToBitmapSource(currentFrame.ToImage<Emgu.CV.Structure.Bgr, byte>());
+                var image = currentFrame.ToImage<Emgu.CV.Structure.Bgr, byte>();
+                using (image)
+                {
+                    if (detections.Count() > 0)
+                    {
+                        foreach (var detection in detections)
+                        {
+                            image.Draw(String.Format("{0}, {1}%", detection.obj_name, (int)(detection.prob * 100)), new System.Drawing.Point(detection.x, detection.y),
+                                FontFace.HersheySimplex, 0.9, new Emgu.CV.Structure.Bgr(System.Drawing.Color.Blue), 2);
+                            image.Draw(new System.Drawing.Rectangle((int)detection.x, (int)detection.y - 20, (int)detection.w, (int)detection.h + 20), new Emgu.CV.Structure.Bgr(System.Drawing.Color.Blue), 2);
+                        }
+
+                    }
+                    _image.Source = ToBitmapSource(image);
+                }
             });
         }
 
@@ -64,9 +93,16 @@ namespace libdarknet.preview
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _capture = new Capture(@"rtsp://technicom:CAMx4tech_1@147.232.79.94/axis-media/media.amp");
+            _capture = new Capture(0);
             _capture.ImageGrabbed += Capture_ImageGrabbed;
             _capture.Start();
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            _detector = new Detector();
+            _detector.Load(@"data/yolo-voc.cfg", @"data/yolo-voc.weights", @"data/voc.names");
         }
     }
 }
