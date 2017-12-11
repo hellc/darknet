@@ -14,6 +14,14 @@ namespace libdarknet_yolo {
 		unsigned int track_id;		// tracking id for video (0 - untracked, 1 - inf - tracked object)
 	};
 
+	public value struct DImage
+	{
+		int h;						// height
+		int w;						// width
+		int c;						// number of chanels (3 - for RGB)
+		float *data;				// pointer to the image data
+	};
+
 	public ref class DetectorWrapper
 	{
 		Detector* m_detector;
@@ -24,5 +32,7 @@ namespace libdarknet_yolo {
 
 		void Load(String^ cfg_filename, String^ weights_filename);
 		array<Detection>^ DetectFromFile(String^ filename);
+		array<Detection>^ DetectOnImage(System::Drawing::Bitmap^ bitmap);
+		array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::DetectOnImage(DImage image);
 	};
 }

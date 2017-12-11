@@ -31,3 +31,4 @@ Thumbs.db
 windows/x64/
 *.pdb
 obj/
+windows/packages/

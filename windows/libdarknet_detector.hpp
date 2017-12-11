@@ -5,7 +5,7 @@
 #include <deque>
 #include <algorithm>
 
-//#define OPENCV //Uncomment if you want to use opencv
+#define OPENCV //Uncomment if you want to use opencv
 
 #ifdef OPENCV
 #include <opencv2/opencv.hpp>			// C++

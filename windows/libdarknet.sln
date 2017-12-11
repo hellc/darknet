@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdarknet.demo", "libdarkn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdarknet.yolosharp", "libdarknet.yolosharp\libdarknet.yolosharp.csproj", "{87879A00-FB71-4372-8FDA-843D59BB2E08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdarknet.preview", "libdarknet.preview\libdarknet.preview.csproj", "{2612C913-B881-4147-8DD0-E05AAC7E6CE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,18 @@ Global
 		{87879A00-FB71-4372-8FDA-843D59BB2E08}.Release|x64.Build.0 = Release|Any CPU
 		{87879A00-FB71-4372-8FDA-843D59BB2E08}.Release|x86.ActiveCfg = Release|Any CPU
 		{87879A00-FB71-4372-8FDA-843D59BB2E08}.Release|x86.Build.0 = Release|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Debug|x64.Build.0 = Debug|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Debug|x86.Build.0 = Debug|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Release|x64.ActiveCfg = Release|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Release|x64.Build.0 = Release|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Release|x86.ActiveCfg = Release|Any CPU
+		{2612C913-B881-4147-8DD0-E05AAC7E6CE0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -26,5 +26,15 @@ namespace libdarknet.yolosharp
         {
             return _detectorWrapper.DetectFromFile(fileName);
         }
+
+        public Detection[] DetectOnImage(System.Drawing.Bitmap bitmap)
+        {
+            return _detectorWrapper.DetectOnImage(bitmap);
+        }
+        
+        public Detection[] DetectOnImage(DImage image)
+        {
+            return _detectorWrapper.DetectOnImage(image);
+        }
     }
 }
