@@ -8,18 +8,21 @@ using libdarknet_yolo;
 
 namespace libdarknet.yolosharp
 {
-    public class Detector
+    public class Detector : IDisposable
     {
         private DetectorWrapper _detectorWrapper;
+        public bool IsLoaded { get; set; }
 
         public Detector()
         {
+            IsLoaded = false;
             _detectorWrapper = new DetectorWrapper();
         }
 
-        public void Load(string cfgFileName, string weightsFileName, string namesFileName = null)
+        public void Load(string cfgFileName, string weightsFileName)
         {
-            _detectorWrapper.Load(cfgFileName, weightsFileName, namesFileName);
+            _detectorWrapper.Load(cfgFileName, weightsFileName);
+            IsLoaded = true;
         }
 
         public Detection[] DetectFromFile(string fileName)
@@ -35,6 +38,21 @@ namespace libdarknet.yolosharp
         public Detection[] DetectOnImage(DImage image)
         {
             return _detectorWrapper.DetectOnImage(image);
+        }
+
+
+        public Detection[] Tracking(Detection[] detections)
+        {
+            return _detectorWrapper.Tracking(detections);
+        }
+
+        public void Dispose()
+        {
+            if (IsLoaded)
+            {
+                _detectorWrapper.Dispose();
+            }
+            _detectorWrapper = null;
         }
     }
 }

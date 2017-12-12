@@ -1,7 +1,5 @@
 #include "libdarknet_detector_crl.hpp"
 
-std::vector<std::string> m_names;
-
 std::string convert_system_string(System::String^ input)
 {
 	std::string result;
@@ -28,12 +26,6 @@ std::vector<std::string> objects_names_from_file(std::string const filename) {
 	return file_lines;
 }
 
-
-std::string object_name_by_index(int index) {
-	if (index >= m_names.size()) return "";
-	return m_names[index];
-}
-
 array<libdarknet_yolo::Detection>^ detections_from_vector(std::vector<bbox_t> vector)
 {
 	int vector_size = vector.size();
@@ -49,26 +41,36 @@ array<libdarknet_yolo::Detection>^ detections_from_vector(std::vector<bbox_t> ve
 			detections[i].obj_id = vector[i].obj_id;
 			detections[i].prob = vector[i].prob;
 			detections[i].track_id = vector[i].track_id;
-
-			int names_count = m_names.size();
-			if (names_count > 0 && vector[i].obj_id < names_count && vector[i].obj_id)
-			{
-				detections[i].obj_name = convert_std_string(object_name_by_index(vector[i].obj_id));
-			}
 		}
 	}
 	
 	return detections;
 }
 
-void libdarknet_yolo::DetectorWrapper::Load(System::String ^ cfg_filename, System::String ^ weights_filename)
+std::vector<bbox_t> vector_from_detections(array<libdarknet_yolo::Detection>^ detections)
 {
-	m_detector->Load(convert_system_string(cfg_filename), convert_system_string(weights_filename));
+	int detections_size = detections->Length;
+	std::vector<bbox_t> result_vector = std::vector<bbox_t>(detections_size);
+
+	if (detections_size > 0)
+	{
+		for (auto i = 0; i != detections_size; i++) {
+
+			result_vector[i].h = detections[i].h;
+			result_vector[i].w = detections[i].w;
+			result_vector[i].x = detections[i].x;
+			result_vector[i].y = detections[i].y;
+			result_vector[i].obj_id = detections[i].obj_id;
+			result_vector[i].prob = detections[i].prob;
+			result_vector[i].track_id = detections[i].track_id;
+		}
+	}
+
+	return result_vector;
 }
 
-void libdarknet_yolo::DetectorWrapper::Load(String ^ cfg_filename, String ^ weights_filename, String ^ names_filename)
+void libdarknet_yolo::DetectorWrapper::Load(System::String ^ cfg_filename, System::String ^ weights_filename)
 {
-	m_names = objects_names_from_file(convert_system_string(names_filename));
 	m_detector->Load(convert_system_string(cfg_filename), convert_system_string(weights_filename));
 }
 
@@ -120,34 +122,19 @@ cv::Mat BitmapToMat(System::Drawing::Bitmap^ bitmap)
 	return thisimage;
 
 	bitmap->UnlockBits(bmpdata);
-
-	//cv::Mat result;
-	//IplImage* tmp = new IplImage();
-
-	//System::Drawing::Imaging::BitmapData^ bmData = bitmap->LockBits(System::Drawing::Rectangle(0, 0, bitmap->Width, bitmap->Height), System::Drawing::Imaging::ImageLockMode::ReadWrite, bitmap->PixelFormat);
-	//if (bitmap->PixelFormat == System::Drawing::Imaging::PixelFormat::Format8bppIndexed)
-	//{
-	//	tmp = cvCreateImage(cvSize(bitmap->Width, bitmap->Height), IPL_DEPTH_8U, 1);
-	//	tmp->imageData = (char*)bmData->Scan0.ToPointer();
-	//}
-
-	//else if (bitmap->PixelFormat == System::Drawing::Imaging::PixelFormat::Format24bppRgb)
-	//{
-	//	tmp = cvCreateImage(cvSize(bitmap->Width, bitmap->Height), IPL_DEPTH_8U, 3);
-	//	tmp->imageData = (char*)bmData->Scan0.ToPointer();
-	//}
-
-	//bitmap->UnlockBits(bmData);
-
-	//result = cv::Mat(cv::Size(tmp->width, tmp->height), 0, tmp->imageData, tmp->widthStep);
-
-	//return result;
 }
 
 array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::DetectOnImage(System::Drawing::Bitmap^ bitmap)
 {
 	cv::Mat image = BitmapToMat(bitmap);
 	std::vector<bbox_t> results = m_detector->detect(image);
+
+	return detections_from_vector(results);
+}
+
+array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::Tracking(array<Detection>^ resultsVector)
+{
+	std::vector<bbox_t> results = m_detector->tracking(vector_from_detections(resultsVector));
 
 	return detections_from_vector(results);
 }

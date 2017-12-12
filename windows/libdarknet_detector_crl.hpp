@@ -12,7 +12,6 @@ namespace libdarknet_yolo {
 		float prob;					// confidence - probability that the object was found correctly
 		int obj_id;		// class of object - from range [0, classes-1]
 		int track_id;		// tracking id for video (0 - untracked, 1 - inf - tracked object)
-		String^ obj_name;		// object name - optional
 	};
 
 	public value struct DImage
@@ -32,9 +31,9 @@ namespace libdarknet_yolo {
 		!DetectorWrapper() { delete m_detector; }
 
 		void Load(String^ cfg_filename, String^ weights_filename);
-		void Load(String^ cfg_filename, String^ weights_filename, String^ names_filename);
 		array<Detection>^ DetectFromFile(String^ filename);
 		array<Detection>^ DetectOnImage(System::Drawing::Bitmap^ bitmap);
+		array<Detection>^ Tracking(array<Detection>^ resultsVector);
 		array<libdarknet_yolo::Detection>^ libdarknet_yolo::DetectorWrapper::DetectOnImage(DImage image);
 	};
 }

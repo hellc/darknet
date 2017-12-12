@@ -61,7 +61,7 @@ namespace libdarknet.preview
                     {
                         foreach (var detection in detections)
                         {
-                            image.Draw(String.Format("{0}, {1}%", detection.obj_name, (int)(detection.prob * 100)), new System.Drawing.Point(detection.x, detection.y),
+                            image.Draw(String.Format("id{0}, {1}%", detection.obj_id, (int)(detection.prob * 100)), new System.Drawing.Point(detection.x, detection.y),
                                 FontFace.HersheySimplex, 0.9, new Emgu.CV.Structure.Bgr(System.Drawing.Color.Blue), 2);
                             image.Draw(new System.Drawing.Rectangle((int)detection.x, (int)detection.y - 20, (int)detection.w, (int)detection.h + 20), new Emgu.CV.Structure.Bgr(System.Drawing.Color.Blue), 2);
                         }
@@ -96,13 +96,12 @@ namespace libdarknet.preview
             _capture = new Capture(0);
             _capture.ImageGrabbed += Capture_ImageGrabbed;
             _capture.Start();
-
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             _detector = new Detector();
-            _detector.Load(@"data/yolo-voc.cfg", @"data/yolo-voc.weights", @"data/voc.names");
+            _detector.Load(@"C:\darknet_wrapper_0.0.1\data\tiny-yolo-voc.cfg", @"C:\darknet_wrapper_0.0.1\data\tiny-yolo-voc.weights");
         }
     }
 }
